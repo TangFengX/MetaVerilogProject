@@ -82,7 +82,8 @@ clean:
 	@rm $(WAVEFROM)/* -rf
 	@rm $(BIN)/* -rf 
 
-
+lint:
+	@$(VERILATOR) --lint-only -Wall $(VERILOG_FILES)
 
 
 
