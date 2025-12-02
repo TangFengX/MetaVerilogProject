@@ -58,16 +58,19 @@ toc:
 	@echo "verilog ----verilator----> cpp"
 	@rm  $(OBJ_DIR)/* -rf
 	@echo "#include \"V$(TOPNAME).h\"" > $(INCLUDE)/top_module_name.h
+	@mkdir -p $(BUILD)
 	@mkdir -p $(OBJ_DIR)
 	@$(VERILATOR) $(VERILATOR_CFLAGS) $(VERILOG_FILES) $(CPP_FILES)
 
 mk:
 	@echo "cpp ----g++----> exe"
+	@mkdir -p $(BIN)
 	@make -f $(OBJ_DIR)/V$(TOPNAME).mk -C $(OBJ_DIR) CXXFLAGS="$(FLAGS)" $(MAKE_FLAGS)
 	@mv $(OBJ_DIR)/V$(TOPNAME) $(BIN)
 
 sim:
 	@echo "show wavefrom in gtkwave"
+	@mkdir -p $(WAVEFROM)
 	@$(BIN)/V$(TOPNAME)
 	@gtkwave $(WAVEFROM_FILE)
 
@@ -78,9 +81,8 @@ run:
 
 
 clean:
-	@rm $(OBJ_DIR)/* -rf
-	@rm $(WAVEFROM)/* -rf
-	@rm $(BIN)/* -rf 
+	@rm $(BUILD) -rf
+	@rm $(BIN) -rf 
 
 lint:
 	@$(VERILATOR) --lint-only -Wall $(VERILOG_FILES)
