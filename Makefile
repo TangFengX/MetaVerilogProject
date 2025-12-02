@@ -7,6 +7,10 @@ PWD=$(shell pwd)
 BUILD=$(PWD)/build
 
 
+TESTBENCH=$(PWD)/testbench
+TESTBENCH_FILE=$(TESTBENCH)/testbench.csv
+SIM_CONFIG_FILE=$(INCLUDE)/sim_config.h
+TESTBENCH_TOOL=$(TESTBENCH)/csv2c.py
 
 
 BIN=$(PWD)/bin
@@ -54,7 +58,7 @@ FLAGS+= $(addprefix -I ,$(INCLUDES))
 
 
 
-toc:
+toc: $(CSRC)/* $(VSRC)/* $(INCLUDE)/*
 	@echo "verilog ----verilator----> cpp"
 	@rm  $(OBJ_DIR)/* -rf
 	@echo "#include \"V$(TOPNAME).h\"" > $(INCLUDE)/top_module_name.h
@@ -62,7 +66,7 @@ toc:
 	@mkdir -p $(OBJ_DIR)
 	@$(VERILATOR) $(VERILATOR_CFLAGS) $(VERILOG_FILES) $(CPP_FILES)
 
-mk:
+mk: 
 	@echo "cpp ----g++----> exe"
 	@mkdir -p $(BIN)
 	@make -f $(OBJ_DIR)/V$(TOPNAME).mk -C $(OBJ_DIR) CXXFLAGS="$(FLAGS)" $(MAKE_FLAGS)
@@ -75,6 +79,7 @@ sim:
 	@gtkwave $(WAVEFROM_FILE)
 
 run:
+	@make tb
 	@make toc
 	@make mk
 	@make sim
@@ -86,6 +91,11 @@ clean:
 
 lint:
 	@$(VERILATOR) --lint-only -Wall $(VERILOG_FILES)
+
+tb: $(TESTBENCH_TOOL) $(TESTBENCH_FILE)
+	@python --version
+	@rm $(SIM_CONFIG_FILE)
+	@python $(TESTBENCH_TOOL) $(TESTBENCH_FILE) $(SIM_CONFIG_FILE)
 
 
 

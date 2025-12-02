@@ -1,31 +1,24 @@
-#include "top_module_name.h" 
-#include "verilated.h"       
-#include "verilated_fst_c.h" 
+#include "top_module_name.h"
+#include "verilated.h"
+#include "verilated_fst_c.h"
 #include "sim_main.h"
+#include "sim_config.h"
 #include <stdarg.h>
+
+VerilatedContext *contextp = new VerilatedContext;
+Vtop *top = new Vtop(contextp);
+VerilatedFstC *tfp = new VerilatedFstC;
+vluint64_t T = 0;
+vluint64_t clk = 0;
+
+vluint64_t half_clk_T = HALF_CLK_CYCLE;
 
 int main(int argc, char **argv)
 {
-    VERILATOR_INIT(argc, argv,20,true,2);//half_clk_cycle should larger than 1
-    
-
-    while (VERILATOR_VALID_STIMULATION_RANGE())
-    {
-        VERILATOR_SWITCH_INPUT_TO_AT(a,0,0);
-        VERILATOR_SWITCH_INPUT_TO_AT(b,0,0);
-        VERILATOR_SWITCH_INPUT_TO_AT(a,5,1);
-        VERILATOR_SWITCH_INPUT_TO_AT(b,10,1);
-        VERILATOR_SWITCH_INPUT_TO_AT(a,10,0);
-        VERILATOR_SWITCH_INPUT_TO_AT(a,15,1);
-        
-        VERILATOR_TOGGLE_CLK();
-        //VERILATOR_SWITCH_INPUT_TO(clk,clk);
-        VERILATOR_EVAL_AND_DUMP();
-        VERILATOR_STEP();
-
-        
-    }
+    VERILATOR_INIT(argc, argv, true);
+    VERILATOR_MAIN_LOOP();
+end:
     VERILATOR_FREE();
-    
+
     return 0;
 }
