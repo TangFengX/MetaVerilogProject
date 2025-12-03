@@ -1,13 +1,9 @@
 .build/obj_dir/*
-<<<<<<< HEAD
-!.build/obj_dir/.gitkeep
+
 .build/wavefrom/*
-!.build/obj_dir/.gitkeep
+
 .bin/*
 !.bin/.gitkeep
-=======
-.build/wavefrom/*
-.bin
->>>>>>> 1307abf568fda9fd5b2803dba4c6c2fe4ebca5ae
 .vscode
 .idea
+ 
