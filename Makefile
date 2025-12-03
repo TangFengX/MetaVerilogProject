@@ -1,9 +1,7 @@
 TOPNAME = top
 VERILATOR = verilator
 WAVEFROM_NAME = wavefrom.fst
-#路径
 PWD=$(shell pwd)
-
 BUILD=$(PWD)/build
 
 
