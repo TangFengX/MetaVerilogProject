@@ -16,18 +16,15 @@ TESTBENCH_TOOL=$(TESTBENCH)/csv2c.py
 BIN=$(PWD)/bin
 CSRC=$(PWD)/src/csrc
 VSRC=$(PWD)/src/vsrc
-TOP_MODULE_FILE=$(if $(wildcard $(VSRC)/$(TOPNAME).v),$(VSRC)/$(TOPNAME).v,(if $(wildcard $(VSRC)/$(TOPNAME).sv),$(VSRC)/$(TOPNAME).sv,))
-
+NVBOARD=$(PWD)/NVBOARD
 OBJ_DIR=$(BUILD)/obj_dir
 INCLUDE = $(PWD)/include
 
 INCLUDES = $(INCLUDE) $(OBJ_DIR)
 
-
+TOP_MODULE_FILE=$(if $(wildcard $(VSRC)/$(TOPNAME).v),$(VSRC)/$(TOPNAME).v,(if $(wildcard $(VSRC)/$(TOPNAME).sv),$(VSRC)/$(TOPNAME).sv,))
 VERILOG_FILES := $(wildcard $(VSRC)/*.v $(VSRC)/*.sv)
 CPP_FILES := $(wildcard $(CSRC)/*.c $(CSRC)/*.cc $(CSRC)/*.cpp)
-pcpp:
-	@echo $(CPP_FILES)
 
 
 WAVEFROM = $(BUILD)/wavefrom
