@@ -1,7 +1,7 @@
 Time(ps),Pin,Value,Note,max stimulate time,20
 0,a,0,,half clock cycle,2
-0,b,0,,enable clock input,0
+,,,,enable clock input,0
 5,a,1,,clock pin name,clk
 10,a,0,,,
-15,b,1,,,
+,,,,,
 15,a,1,,,

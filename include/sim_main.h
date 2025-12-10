@@ -47,21 +47,21 @@
         }                                           \
     } while (0)
 
-#define VERILATOR_STEP_AND_EVAL_UNTIL(t)              \
-    do                                                \
-    {                                                 \
-        VERILATOR_END_CHECK();                        \
-        VERILATOR_TOGGLE_CLK();                       \
-        VERILATOR_SWITCH_INPUT_TO(CLK_PIN_NAME, clk); \
-        VERILATOR_EVAL_AND_DUMP();                    \
-        VERILATOR_STEP();                             \
+#define VERILATOR_STEP_AND_EVAL_UNTIL(t) \
+    do                                   \
+    {                                    \
+        VERILATOR_END_CHECK();           \
+        VERILATOR_TOGGLE_CLK();          \
+        VERILATOR_CLK_INPUT(clk);        \
+        VERILATOR_EVAL_AND_DUMP();       \
+        VERILATOR_STEP();                \
     } while (T < t)
 
 #if ENABLE_CLK_INPUT == 1
-#define VERILATOR_CLK_INPUT(pin, clk) \
+#define VERILATOR_CLK_INPUT(clk) \
     VERILATOR_SWITCH_INPUT_TO(CLK_PIN_NAME, clk)
 #else
-#define VERILATOR_CLK_INPUT(pin, clk)
+#define VERILATOR_CLK_INPUT(clk)
 #endif
 
 #endif // _SIM_MAIN_H_

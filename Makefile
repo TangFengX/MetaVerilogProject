@@ -83,7 +83,7 @@ clean:
 lint:
 	@$(VERILATOR) --lint-only -Wall $(VERILOG_FILES)
 tb:$(SIM_CONFIG_FILE)
-$(SIM_CONFIG_FILE): 
+$(SIM_CONFIG_FILE): $(TESTBENCH_FILE)
 	@python --version
 	@rm $(SIM_CONFIG_FILE) -f
 	@python $(TESTBENCH_TOOL) $(TESTBENCH_FILE) $(SIM_CONFIG_FILE)
