@@ -9,7 +9,7 @@ TESTBENCH=$(PWD)/testbench
 TESTBENCH_FILE=$(TESTBENCH)/testbench.csv
 SIM_CONFIG_FILE=$(INCLUDE)/sim_config.h
 TESTBENCH_TOOL=$(TESTBENCH)/csv2c.py
-
+TARGET=$(BIN)/V$(TOPNAME)
 
 BIN=$(PWD)/bin
 CSRC=$(PWD)/src/csrc
@@ -24,8 +24,6 @@ INCLUDES = $(INCLUDE) $(OBJ_DIR)
 
 VERILOG_FILES := $(wildcard $(VSRC)/*.v $(VSRC)/*.sv)
 CPP_FILES := $(wildcard $(CSRC)/*.c $(CSRC)/*.cc $(CSRC)/*.cpp)
-pcpp:
-	@echo $(CPP_FILES)
 
 
 WAVEFROM = $(BUILD)/wavefrom
@@ -50,13 +48,11 @@ FLAGS+= -O2
 FLAGS+= $(addprefix -I ,$(INCLUDES))
 
 
+mk:$(TARGET)
 
 
-
-
-
-
-toc: $(CSRC)/* $(VSRC)/* $(INCLUDE)/*
+toc:$(OBJ_DIR)/V$(TOPNAME).mk
+$(OBJ_DIR)/V$(TOPNAME).mk: $(SIM_CONFIG_FILE)
 	@echo "verilog ----verilator----> cpp"
 	@rm  $(OBJ_DIR)/* -rf
 	@echo "#include \"V$(TOPNAME).h\"" > $(INCLUDE)/top_module_name.h
@@ -64,23 +60,20 @@ toc: $(CSRC)/* $(VSRC)/* $(INCLUDE)/*
 	@mkdir -p $(OBJ_DIR)
 	@$(VERILATOR) $(VERILATOR_CFLAGS) $(VERILOG_FILES) $(CPP_FILES)
 
-mk: 
+$(TARGET): $(OBJ_DIR)/V$(TOPNAME).mk
 	@echo "cpp ----g++----> exe"
 	@mkdir -p $(BIN)
 	@make -f $(OBJ_DIR)/V$(TOPNAME).mk -C $(OBJ_DIR) CXXFLAGS="$(FLAGS)" $(MAKE_FLAGS)
 	@mv $(OBJ_DIR)/V$(TOPNAME) $(BIN)
 
-sim:
+sim:$(TARGET)
 	@echo "show wavefrom in gtkwave"
 	@mkdir -p $(WAVEFROM)
 	@$(BIN)/V$(TOPNAME)
 	@gtkwave $(WAVEFROM_FILE)
 
-run:
-	@make tb
-	@make toc
-	@make mk
-	@make sim
+run:sim
+	
 
 
 clean:
@@ -89,10 +82,10 @@ clean:
 
 lint:
 	@$(VERILATOR) --lint-only -Wall $(VERILOG_FILES)
-
-tb: $(TESTBENCH_TOOL) $(TESTBENCH_FILE)
+tb:$(SIM_CONFIG_FILE)
+$(SIM_CONFIG_FILE): 
 	@python --version
-	@rm $(SIM_CONFIG_FILE)
+	@rm $(SIM_CONFIG_FILE) -f
 	@python $(TESTBENCH_TOOL) $(TESTBENCH_FILE) $(SIM_CONFIG_FILE)
 
 
