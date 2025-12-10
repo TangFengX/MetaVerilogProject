@@ -28,7 +28,7 @@
 
 1. 将本项目下载到本地
 ```
-git clone https://github.com/NJU-ProjectN/nvboard.git
+git clone https://github.com/NJU-ProjectN/nvboard.git --recursive
 ```
 2. 确定依赖是否安装
 ```
