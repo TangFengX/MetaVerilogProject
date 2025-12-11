@@ -69,7 +69,7 @@ FLAGS+= $(addprefix -I ,$(INCLUDES))
 .PHONY: all toc sim clean cleanlib tb bind 
 
 
-$(EXECUTABLE): $(OBJ_DIR)/V$(TOPNAME).mk $(SIM_CONFIG_FILE) $(PIN_BIND_CONFIG_CPP_FILE)  $(NVBOARD_ARCHIVE)#build exe with auto-generated .mk file
+$(EXECUTABLE): $(OBJ_DIR)/V$(TOPNAME).mk $(SIM_CONFIG_FILE) $(PIN_BIND_CONFIG_CPP_FILE)  $(NVBOARD_ARCHIVE) $(CSRC) $(VSRC) $(wildcard $(INCLUDE)/*.h)#build exe with auto-generated .mk file
 	@echo "cpp ----g++----> exe"
 	@mkdir -p $(BIN)
 	@make -f $(OBJ_DIR)/V$(TOPNAME).mk -C $(OBJ_DIR) CXXFLAGS="$(FLAGS)" $(MAKE_FLAGS) LDLIBS="$(NVBOARD_ARCHIVE) -lSDL2 -lSDL2_image -lSDL2_ttf -lz $(LDLIBS)"
