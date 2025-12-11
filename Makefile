@@ -60,7 +60,7 @@ $(OBJ_DIR)/V$(TOPNAME).mk: $(SIM_CONFIG_FILE)
 	@mkdir -p $(OBJ_DIR)
 	@$(VERILATOR) $(VERILATOR_CFLAGS) $(VERILOG_FILES) $(CPP_FILES)
 
-$(TARGET): $(OBJ_DIR)/V$(TOPNAME).mk
+$(TARGET): $(OBJ_DIR)/V$(TOPNAME).mk $(CSRC) $(wildcard $(INCLUDE)/*.h) $(VSRC)
 	@echo "cpp ----g++----> exe"
 	@mkdir -p $(BIN)
 	@make -f $(OBJ_DIR)/V$(TOPNAME).mk -C $(OBJ_DIR) CXXFLAGS="$(FLAGS)" $(MAKE_FLAGS)
@@ -83,6 +83,7 @@ clean:
 lint:
 	@$(VERILATOR) --lint-only -Wall $(VERILOG_FILES)
 tb:$(SIM_CONFIG_FILE)
+
 $(SIM_CONFIG_FILE): $(TESTBENCH_FILE)
 	@python --version
 	@rm $(SIM_CONFIG_FILE) -f
