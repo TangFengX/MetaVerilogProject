@@ -102,5 +102,9 @@ run:$(EXECUTABLE)
 	@$(BIN)/V$(TOPNAME)
 
 
+genbind:$(shell pwd)/pin/top.nxdclite
+	@python $(shell pwd)/pin/gen_tool.py
+
+
 
 
