@@ -1,9 +1,6 @@
-.build/obj_dir/*
-
-.build/wavefrom/*
-
-.bin/*
-!.bin/.gitkeep
+build/*
+wavefrom/*
+bin/*
 .vscode
 .idea
  

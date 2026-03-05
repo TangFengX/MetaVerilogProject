@@ -72,10 +72,11 @@ sim:$(TARGET)
 	@echo "show wavefrom in gtkwave"
 	@gtkwave $(LATEST_FST)
 
-run:$(TARGET)
+run:
 	@mkdir -p $(WAVEFROM)
 	@$(TARGET)
-	@fst2vcd $(LATEST_FST) > $(patsubst %.fst, %.vcd, $(LATEST_FST))
+	@LATEST_FST=$$(ls $(WAVEFROM)/*.fst 2>/dev/null | sort | tail -n 1); \
+	fst2vcd "$$LATEST_FST" > "$${LATEST_FST%.fst}.vcd" 2>/dev/null || true
 	
 
 
@@ -86,6 +87,7 @@ cleanwave:
 	@rm $(WAVEFROM) -rf
 
 cleanall:clean cleanwave
+
 lint:
 	@$(VERILATOR) --lint-only -Wall $(VERILOG_FILES)
 tb:$(SIM_CONFIG_FILE)
