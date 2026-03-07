@@ -2,14 +2,15 @@ TOPNAME = top
 VERILATOR = verilator
 TIMESTAMP = $(shell date +%Y%m%d_%H%M%S)
 .DEFAULT_GOAL:=all
+
 b?=0
 
 
 
 
 
-
 PWD=$(shell pwd)
+NVBOARD_HOME=$(PWD)/nvboard
 NVBOARD_HOME=$(PWD)/nvboard
 BUILD=$(PWD)/build
 PIN=$(PWD)/pin
@@ -20,6 +21,10 @@ OBJ_DIR=$(BUILD)/obj_dir
 INCLUDE = $(PWD)/include
 TESTBENCH=$(PWD)/testbench
 WAVEFROM = $(PWD)/wavefrom
+
+STATE_FILE = $(BUILD)/.last_build_type
+
+
 
 
 
@@ -47,7 +52,18 @@ else
 	CPP_FILES := $(filter-out $(CSRC)/auto_bind.cpp, $(CPP_FILES))
 endif
 
-all:$(EXECUTABLE)
+all:
+	@mkdir -p $(BUILD)
+	@if [ -f $(STATE_FILE) ]; then \
+		LAST_B=$$(cat $(STATE_FILE) 2>/dev/null || echo ""); \
+		if [ -n "$$LAST_B" ] && [ "$$LAST_B" != "$(b)" ]; then \
+			$(MAKE) cleanall; \
+			mkdir -p $(BUILD);\
+		fi; \
+	fi
+	@echo $(b) > $(STATE_FILE)
+	@$(MAKE) $(EXECUTABLE)
+
 
 
 INCLUDES_FILE :=$(wildcard $(INCLUDE)/*.h)
@@ -80,12 +96,11 @@ MAKE_FLAGS+= -f $(OBJ_DIR)/V$(TOPNAME).mk -C $(OBJ_DIR) CXXFLAGS="$(CFLAGS)"  LD
 
 
 $(EXECUTABLE): $(OBJ_DIR)/V$(TOPNAME).mk  $(CPP_FILES) $(INCLUDES_FILE) $(NVBOARD_ARCHIVE)
-	@echo "b=$(b)\n,$(CPP_FILES)"
 	@mkdir -p $(BIN)
 	@make $(MAKE_FLAGS)
 	@mv $(OBJ_DIR)/V$(TOPNAME) $(BIN)
 
-toc:$(OBJ_DIR)/V$(TOPNAME).mk
+
 $(OBJ_DIR)/V$(TOPNAME).mk : $(VERILOG_FILES) 
 	@mkdir -p $(BUILD)
 	@mkdir -p $(OBJ_DIR)
@@ -120,7 +135,7 @@ cleanlib:
 cleanwave:
 	@rm $(WAVEFROM) -rf
 
-cleanall:clean cleanlib cleanwave
+cleanall:clean cleanwave
 
 lint:
 	@$(VERILATOR) --lint-only -Wall $(VERILOG_FILES)

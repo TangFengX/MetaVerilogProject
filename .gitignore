@@ -1,7 +1,5 @@
-
 build/*
-bin/*
 wavefrom/*
-
+bin/*
 .vscode
 .idea
