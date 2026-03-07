@@ -7,6 +7,13 @@
     top->trace(tfp, 99);                     \
     tfp->open(WAVEFILE);
 
+#ifdef NVBOARD
+#define NVBOARD_UPDATE nvboard_update()
+#define NVBOARD_QUIT nvboard_quit()
+#else
+#define NVBOARD_UPDATE
+#define NVBOARD_QUIT
+#endif // DEBUG
 #define VERILATOR_TOGGLE_CLK()       \
     do                               \
     {                                \
@@ -18,7 +25,7 @@
 
 #define VERILATOR_EVAL_AND_DUMP()         \
     top->eval();                          \
-    nvboard_update();                     \
+    NVBOARD_UPDATE;                     \
     do                                    \
     {                                     \
         if (!ENABLE_WAVEFROM_ACQUISITION) \
@@ -37,7 +44,7 @@
     delete tfp;          \
     delete top;          \
     delete contextp;    \
-    nvboard_quit();
+    NVBOARD_QUIT;
 #if ENABLE_LIMIT_TIME_STIMULATION == 1
 #define VERILATOR_VALID_STIMULATION_RANGE() !contextp->gotFinish() && T < MAX_TIME_SIM
 #else

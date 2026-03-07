@@ -3,12 +3,16 @@
 #include "verilated_fst_c.h"
 #include "sim_main.h"
 #include "sim_config.h"
+#include <stdarg.h>
+#ifdef NVBOARD
 #include <nvboard.h>
+#endif 
 #include <stdio.h>
 #include <cstdlib>
 #include <csignal>
-
+#ifdef NVBOARD
 void nvboard_bind_all_pins(Vtop *top);
+#endif 
 VerilatedContext *contextp = new VerilatedContext;
 Vtop *top = new Vtop(contextp);
 VerilatedFstC *tfp = new VerilatedFstC;
@@ -21,9 +25,6 @@ void close_wave()
     printf("\n[Waveform] FST file has been closed successfully via atexit.\n");
 }
 void signal_handler(int sig) {
-    if (sig == SIGINT) printf("\n[Signal] 捕捉到 Ctrl+C (SIGINT)\n");
-    if (sig == SIGTSTP) printf("\n[Signal] 捕捉到 Ctrl+Z (SIGTSTP)\n");
-    // 强制调用 exit(0)，这将自动触发 atexit 注册的 close_wave_assets
     std::exit(0); 
 }
 int main(int argc, char **argv)
@@ -32,12 +33,14 @@ int main(int argc, char **argv)
     std::signal(SIGINT, signal_handler);  
     std::signal(SIGTSTP, signal_handler);
     printf("Start\n");
+#ifdef NVBOARD
     nvboard_bind_all_pins(top);
     nvboard_init();
+#endif 
     VERILATOR_INIT(argc, argv, true);
     VERILATOR_MAIN_INITIAL_BLOCK();
     VERILATOR_MAIN_FOREVER_BLOCK();
 end:
-    VERILATOR_FREE();
+    exit(0);
     return 0;
 }

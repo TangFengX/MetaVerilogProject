@@ -12,7 +12,7 @@
 #define INITIAL_BLOCK_MAX_STIMULATE_TIME 20
 #define ENABLE_FOREVER_BLOCK 1
 #define FOREVER_BLOCK_CYCLE 20
-#define ENABLE_WAVEFROM_ACQUISITION 1
+#define ENABLE_WAVEFROM_ACQUISITION 0
 
 #define VERILATOR_MAIN_INITIAL_BLOCK()                                   \
     do                                                                   \
@@ -20,10 +20,10 @@
             if (!ENABLE_INITIAL_BLOCK) \
                 break; \
             VERILATOR_SWITCH_INPUT_TO(rst, 1); \
-            nvboard_update(); \
+            NVBOARD_UPDATE; \
             VERILATOR_STEP_AND_EVAL_UNTIL(10); \
             VERILATOR_SWITCH_INPUT_TO(rst, 0); \
-            nvboard_update(); \
+            NVBOARD_UPDATE; \
             VERILATOR_STEP_AND_EVAL_UNTIL(INITIAL_BLOCK_MAX_STIMULATE_TIME); \
     } while (0)
 
